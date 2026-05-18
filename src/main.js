@@ -2,6 +2,7 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { initCursor } from './cursor.js'
 import { initScroll } from './scroll.js'
+import { initSculptureLookAt } from './sculpture.js'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -89,3 +90,4 @@ tl.call(() => {
 
 initCursor()
 initScroll()
+initSculptureLookAt()

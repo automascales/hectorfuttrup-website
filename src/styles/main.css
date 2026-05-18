@@ -211,9 +211,6 @@ body {
   transition: transform 0.8s var(--ease-out);
 }
 
-.sculpture-wrap:hover .sculpture {
-  transform: scale(1.03);
-}
 
 /* ─── Scroll indicator ────────────────────────────────────── */
 .scroll-indicator {
