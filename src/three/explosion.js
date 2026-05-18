@@ -20,14 +20,14 @@ const FACTS = [
   'Never stops building',
 ]
 
-const NUM_GROUPS = FACTS.length
+const NUM_GROUPS = 52   // more groups = smaller, shard-like pieces
+const LABELED = FACTS.length  // first 16 get text labels; rest are decorative
 
 export function buildExplosion(scene, model) {
   if (!model) return null
 
   model.updateWorldMatrix(true, true)
 
-  // Collect all triangles in world space
   const triangles = []
   model.traverse((child) => {
     if (!child.isMesh) return
@@ -50,8 +50,12 @@ export function buildExplosion(scene, model) {
 
   if (triangles.length === 0) return null
 
-  // Sort by Y, chunk into NUM_GROUPS
-  triangles.sort((a, b) => b.center.y - a.center.y)
+  // Random shuffle: creates varied, irregular fragment shapes (no systematic ring/strip artifacts)
+  for (let i = triangles.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[triangles[i], triangles[j]] = [triangles[j], triangles[i]]
+  }
+
   const chunkSize = Math.ceil(triangles.length / NUM_GROUPS)
 
   const matcapTex = new THREE.TextureLoader().load('/textures/matcap-marble.png')
@@ -61,9 +65,9 @@ export function buildExplosion(scene, model) {
     const chunk = triangles.slice(g * chunkSize, (g + 1) * chunkSize)
     if (chunk.length === 0) continue
 
-    // Compute group centroid and average normal in world space
-    let gCenter = new THREE.Vector3()
-    let gNormal = new THREE.Vector3()
+    // Group centroid + average surface normal
+    const gCenter = new THREE.Vector3()
+    const gNormal = new THREE.Vector3()
     chunk.forEach(({ center, normal }) => {
       gCenter.add(center)
       gNormal.add(normal)
@@ -71,7 +75,7 @@ export function buildExplosion(scene, model) {
     gCenter.divideScalar(chunk.length)
     gNormal.divideScalar(chunk.length).normalize()
 
-    // Build geometry with vertices RELATIVE to gCenter (local space)
+    // Build geometry with vertices in local space (relative to gCenter)
     const verts = []
     chunk.forEach(({ v0, v1, v2 }) => {
       verts.push(
@@ -87,33 +91,36 @@ export function buildExplosion(scene, model) {
 
     const mat = new THREE.MeshMatcapMaterial({ matcap: matcapTex, side: THREE.DoubleSide })
     const mesh = new THREE.Mesh(geo, mat)
-    // Start at world centroid — matches where the head actually sits
     mesh.position.copy(gCenter)
     mesh.visible = false
     scene.add(mesh)
 
-    // CSS2D label — positioned at mesh local origin (= gCenter in world)
-    const div = document.createElement('div')
-    div.className = 'fragment-label'
-    div.textContent = FACTS[g]
-    const label = new CSS2DObject(div)
-    label.position.set(0, 0, 0)
-    mesh.add(label)
+    // Only labeled groups get a CSS2D fact tag
+    let labelDiv = null
+    if (g < LABELED) {
+      const div = document.createElement('div')
+      div.className = 'fragment-label'
+      div.textContent = FACTS[g]
+      const label = new CSS2DObject(div)
+      label.position.set(0, 0, 0)
+      mesh.add(label)
+      labelDiv = div
+    }
 
-    // Explosion target — keep within camera view (camera at z=4.5, looking at origin)
-    const spread = 1.2 + Math.random() * 1.0
+    // Explosion target — dramatic scatter, keep within camera frustum (cam z=4.5)
+    const spread = 2.2 + Math.random() * 2.0
     const target = gCenter.clone().addScaledVector(gNormal, spread)
-    target.x += (Math.random() - 0.5) * 2.5
-    target.y += (Math.random() - 0.5) * 2.0
-    target.z += (Math.random() - 0.5) * 0.8
+    target.x += (Math.random() - 0.5) * 3.2
+    target.y += (Math.random() - 0.5) * 2.8
+    target.z += (Math.random() - 0.5) * 1.6
 
     const rotTarget = new THREE.Euler(
-      (Math.random() - 0.5) * Math.PI * 2,
-      (Math.random() - 0.5) * Math.PI * 2,
-      (Math.random() - 0.5) * Math.PI * 2
+      (Math.random() - 0.5) * Math.PI * 3,
+      (Math.random() - 0.5) * Math.PI * 3,
+      (Math.random() - 0.5) * Math.PI * 3
     )
 
-    fragments.push({ mesh, label: div, origin: gCenter.clone(), target, rotTarget })
+    fragments.push({ mesh, label: labelDiv, origin: gCenter.clone(), target, rotTarget })
   }
 
   return fragments
@@ -125,7 +132,7 @@ export function triggerExplosion(fragments, model, progress) {
   model.visible = progress < 0.04
 
   fragments.forEach((frag, i) => {
-    const stagger = (i / fragments.length) * 0.2
+    const stagger = (i / fragments.length) * 0.25
     const local = clamp01((progress - stagger) / (1 - stagger))
     const e = easeOutCubic(local)
 
@@ -135,7 +142,9 @@ export function triggerExplosion(fragments, model, progress) {
     frag.mesh.rotation.y = frag.rotTarget.y * e
     frag.mesh.rotation.z = frag.rotTarget.z * e
 
-    frag.label.classList.toggle('visible', e > 0.65)
+    if (frag.label) {
+      frag.label.classList.toggle('visible', e > 0.6)
+    }
   })
 }
 
