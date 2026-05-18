@@ -7,12 +7,14 @@
   --ff-serif: 'Playfair Display', Georgia, serif;
   --ff-mono:  'Space Mono', 'Courier New', monospace;
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --divider:  rgba(26, 20, 16, 0.08);
 }
 
 /* Dark theme overrides */
 :root[data-theme="dark"] {
   --bg: #111009;
   --fg: #f2ede4;
+  --divider: rgba(242, 237, 228, 0.08);
 }
 
 /* ─── Reset ───────────────────────────────────────────────── */
@@ -148,7 +150,6 @@ body {
   background: none;
   border: none;
   padding: 0;
-  cursor: none;
   opacity: 0.45;
   transition: opacity 0.22s ease, color 0.22s ease;
 }
@@ -241,7 +242,6 @@ body {
   display: block;
   user-select: none;
   will-change: transform;
-  transition: transform 0.8s var(--ease-out);
 }
 
 
@@ -281,7 +281,7 @@ body {
   align-items: center;
   padding: 6rem 8vw;
   background: var(--bg);
-  border-top: 1px solid rgba(26, 20, 16, 0.08);
+  border-top: 1px solid var(--divider);
 }
 
 .bio-inner {
@@ -320,8 +320,8 @@ body {
 /* ─── Marquee ─────────────────────────────────────────────── */
 #marquee {
   overflow: hidden;
-  border-top: 1px solid rgba(26, 20, 16, 0.08);
-  border-bottom: 1px solid rgba(26, 20, 16, 0.08);
+  border-top: 1px solid var(--divider);
+  border-bottom: 1px solid var(--divider);
   padding: 1.2rem 0;
   background: var(--bg);
 }
@@ -363,7 +363,7 @@ body {
   justify-content: center;
   padding: 5rem 8vw;
   background: var(--bg);
-  border-top: 1px solid rgba(26, 20, 16, 0.08);
+  border-top: 1px solid var(--divider);
 }
 
 .contact-inner {
