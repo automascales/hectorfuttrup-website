@@ -1,85 +1,197 @@
-/* ─── Design tokens ─────────────────────────────────────── */
+/* ─── Design tokens ───────────────────────────────────────── */
 :root {
   --bg:       #f2ede4;
   --fg:       #1a1410;
-  --accent1:  #c85a3a;   /* terracotta */
-  --accent2:  #b8942a;   /* ochre/gold */
+  --accent1:  #c85a3a;
+  --accent2:  #b8942a;
   --ff-serif: 'Playfair Display', Georgia, serif;
   --ff-mono:  'Space Mono', 'Courier New', monospace;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* ─── Reset ─────────────────────────────────────────────── */
+/* ─── Reset ───────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-html { scroll-behavior: auto; } /* Lenis handles smooth scroll */
+html { scroll-behavior: auto; }
 
 body {
   background: var(--bg);
   color: var(--fg);
   font-family: var(--ff-mono);
   overflow-x: hidden;
+  cursor: none;
 }
 
-/* ─── Canvas — always fixed in background ────────────────── */
-#canvas-container {
+/* Restore cursor on touch devices */
+@media (pointer: coarse) {
+  body { cursor: auto; }
+}
+
+/* ─── Custom cursor ───────────────────────────────────────── */
+.cursor-dot,
+.cursor-ring {
   position: fixed;
-  inset: 0;
-  z-index: 0;
+  top: 0;
+  left: 0;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  will-change: transform;
 }
 
-#canvas-container canvas {
-  display: block;
-  width: 100% !important;
-  height: 100% !important;
+.cursor-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--fg);
+  z-index: 10000;
 }
 
-/* ─── Hero ───────────────────────────────────────────────── */
+.cursor-ring {
+  width: 30px;
+  height: 30px;
+  border: 1.5px solid var(--fg);
+  opacity: 0.55;
+  transition:
+    width 0.35s var(--ease-out),
+    height 0.35s var(--ease-out),
+    border-color 0.3s ease,
+    opacity 0.3s ease;
+}
+
+.cursor-ring.hovered {
+  width: 50px;
+  height: 50px;
+  border-color: var(--accent1);
+  opacity: 0.75;
+}
+
+@media (pointer: coarse) {
+  .cursor-dot,
+  .cursor-ring { display: none; }
+}
+
+/* ─── Scroll progress bar ─────────────────────────────────── */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  width: 0%;
+  background: var(--accent1);
+  z-index: 9998;
+  pointer-events: none;
+  transition: width 0.08s linear;
+}
+
+/* ─── Hero ────────────────────────────────────────────────── */
 #hero {
   position: relative;
-  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: 52% 48%;
+  height: 100%;
+}
+
+.hero-left {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: flex-end;
-  padding-bottom: 6vh;
-  z-index: 1;
-  /* transparent — canvas shows through */
-  background: transparent;
-}
-
-.hero-text {
+  justify-content: center;
+  padding: 8vh 5vw 8vh 8vw;
   position: relative;
   z-index: 2;
-  text-align: center;
-  pointer-events: none;
+  background: var(--bg);
 }
 
+/* Vertical divider */
+.hero-left::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 10%;
+  bottom: 10%;
+  width: 1px;
+  background: rgba(26, 20, 16, 0.12);
+}
+
+.hero-eyebrow {
+  display: block;
+  font-family: var(--ff-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--fg);
+  margin-bottom: 2.5rem;
+}
+
+/* Name — mask reveal on load */
 .name {
   font-family: var(--ff-serif);
-  font-size: clamp(2.4rem, 7vw, 7rem);
+  font-size: clamp(3.2rem, 6.5vw, 8rem);
   font-weight: 700;
-  letter-spacing: 0.08em;
-  line-height: 1;
-  color: var(--fg);
+  line-height: 0.92;
+  letter-spacing: -0.01em;
+}
+
+.name-line {
+  display: block;
+  overflow: hidden;
+  line-height: 1.05;
+}
+
+.name-line-inner {
+  display: block;
 }
 
 .tagline {
-  margin-top: 0.75rem;
+  margin-top: 2rem;
   font-family: var(--ff-mono);
-  font-size: clamp(0.65rem, 1.2vw, 0.9rem);
-  letter-spacing: 0.25em;
+  font-size: clamp(0.58rem, 0.9vw, 0.78rem);
+  letter-spacing: 0.24em;
   text-transform: uppercase;
   color: var(--fg);
-  opacity: 0.55;
+  opacity: 0.45;
+  line-height: 2;
 }
 
-/* Scroll indicator */
+/* ─── Hero — sculpture side ───────────────────────────────── */
+.hero-right {
+  position: relative;
+  overflow: hidden;
+}
+
+.sculpture-wrap {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.sculpture {
+  width: 100%;
+  height: 115%;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+  user-select: none;
+  will-change: transform;
+  transition: transform 0.8s var(--ease-out);
+}
+
+.sculpture-wrap:hover .sculpture {
+  transform: scale(1.03);
+}
+
+/* ─── Scroll indicator ────────────────────────────────────── */
 .scroll-indicator {
   position: absolute;
   bottom: 2.5rem;
-  left: 50%;
+  left: 26%;
   transform: translateX(-50%);
-  z-index: 2;
+  z-index: 3;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -90,102 +202,130 @@ body {
   width: 1px;
   height: 3.5rem;
   background: var(--fg);
-  opacity: 0.3;
-  animation: scrollPulse 2s ease-in-out infinite;
+  opacity: 0.25;
+  animation: scrollPulse 2.2s ease-in-out infinite;
   transform-origin: top;
 }
 
 @keyframes scrollPulse {
-  0%   { transform: scaleY(0); opacity: 0; }
-  50%  { transform: scaleY(1); opacity: 0.35; }
+  0%   { transform: scaleY(0); opacity: 0; transform-origin: top; }
+  45%  { transform: scaleY(1); opacity: 0.3; }
+  55%  { transform: scaleY(1); opacity: 0.3; transform-origin: bottom; }
   100% { transform: scaleY(0); opacity: 0; transform-origin: bottom; }
 }
 
-/* ─── Explosion section ──────────────────────────────────── */
-#explosion {
-  position: relative;
-  height: 200vh;
-  z-index: 1;
-  background: transparent;
+/* ─── Facts ───────────────────────────────────────────────── */
+#facts {
+  padding: 7rem 8vw 7rem;
+  background: var(--bg);
+  border-top: 1px solid rgba(26, 20, 16, 0.08);
 }
 
-/* CSS2D labels rendered by Three.js */
-#css2d-renderer {
-  position: fixed;
-  inset: 0;
-  z-index: 5;
-  pointer-events: none;
-}
-
-.fragment-label {
+.facts-label {
+  display: block;
   font-family: var(--ff-mono);
-  font-size: clamp(0.55rem, 1vw, 0.78rem);
-  letter-spacing: 0.15em;
+  font-size: 0.62rem;
+  letter-spacing: 0.35em;
   text-transform: uppercase;
   color: var(--fg);
-  white-space: nowrap;
+  opacity: 0.35;
+  margin-bottom: 2.5rem;
+}
+
+.facts-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.fact-chip {
+  font-family: var(--ff-mono);
+  font-size: clamp(0.58rem, 0.85vw, 0.7rem);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--fg);
+  border: 1px solid rgba(26, 20, 16, 0.16);
+  padding: 0.5em 1em;
+  display: inline-block;
+  cursor: default;
+  /* initial animation state — driven by GSAP */
   opacity: 0;
-  transition: opacity 0.4s ease;
-  padding: 0.2em 0;
+  transform: translateY(8px);
+  transition:
+    border-color 0.22s ease,
+    color 0.22s ease,
+    background 0.22s ease,
+    transform 0.22s ease;
 }
 
-.fragment-label.visible {
-  opacity: 1;
+.fact-chip:hover {
+  border-color: var(--accent1);
+  color: var(--accent1);
+  transform: translateY(-2px);
 }
 
-/* ─── Bio ────────────────────────────────────────────────── */
+/* ─── Bio ─────────────────────────────────────────────────── */
 #bio {
-  position: relative;
-  z-index: 2;
-  min-height: 70vh;
+  min-height: 55vh;
   display: flex;
   align-items: center;
-  justify-content: center;
   padding: 6rem 8vw;
   background: var(--bg);
+  border-top: 1px solid rgba(26, 20, 16, 0.08);
 }
 
 .bio-inner {
-  max-width: 52rem;
+  max-width: 50rem;
 }
 
 .bio-text {
   font-family: var(--ff-serif);
-  font-size: clamp(1.4rem, 3.5vw, 2.6rem);
+  font-size: clamp(1.5rem, 3vw, 2.6rem);
+  font-style: italic;
   line-height: 1.5;
   font-weight: 400;
   color: var(--fg);
 }
 
-.reveal-word {
+/* Mask reveal — each line slides up from underneath */
+.reveal-line {
   display: block;
   overflow: hidden;
-  opacity: 0;
-  transform: translateY(1.2em);
-  transition: opacity 0.7s ease, transform 0.7s ease;
+  padding-bottom: 0.05em;
 }
 
-.reveal-word.revealed {
-  opacity: 1;
+.reveal-line-inner {
+  display: block;
+  transform: translateY(110%);
+  transition: transform 0.85s var(--ease-out);
+}
+
+.reveal-line.revealed .reveal-line-inner {
   transform: translateY(0);
 }
 
-/* ─── Contact ────────────────────────────────────────────── */
+/* Stagger delays */
+.reveal-line:nth-child(2) .reveal-line-inner { transition-delay: 0.08s; }
+.reveal-line:nth-child(3) .reveal-line-inner { transition-delay: 0.18s; }
+
+/* ─── Contact ─────────────────────────────────────────────── */
 #contact {
-  position: relative;
-  z-index: 2;
-  min-height: 40vh;
+  min-height: 35vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 4rem 8vw;
+  padding: 5rem 8vw;
   background: var(--bg);
-  border-top: 1px solid rgba(26, 20, 16, 0.1);
+  border-top: 1px solid rgba(26, 20, 16, 0.08);
+}
+
+.contact-inner {
+  text-align: center;
 }
 
 .contact-link {
   font-family: var(--ff-mono);
-  font-size: clamp(0.85rem, 1.8vw, 1.2rem);
+  font-size: clamp(0.82rem, 1.6vw, 1.15rem);
   letter-spacing: 0.08em;
   color: var(--fg);
   text-decoration: none;
@@ -193,37 +333,96 @@ body {
   align-items: center;
   gap: 0.5em;
   position: relative;
-  transition: color 0.25s ease;
+  transition: color 0.28s ease;
+  padding-bottom: 3px;
+  will-change: transform;
 }
 
+/* Animated underline draw */
 .contact-link::after {
   content: '';
   position: absolute;
-  bottom: -2px;
+  bottom: 0;
   left: 0;
-  width: 0;
+  width: 0%;
   height: 1px;
   background: var(--accent1);
-  transition: width 0.35s ease;
+  transition: width 0.38s var(--ease-out);
 }
 
-.contact-link:hover { color: var(--accent1); }
-.contact-link:hover::after { width: 100%; }
+.contact-link:hover {
+  color: var(--accent1);
+}
+
+.contact-link:hover::after {
+  width: 100%;
+}
+
+/* Click press effect */
+.contact-link:active {
+  transform: scale(0.98) !important;
+}
 
 .arrow {
   color: var(--accent1);
-  font-size: 1.1em;
+  transition: transform 0.3s var(--ease-out);
 }
 
-/* ─── Magnetic cursor wrapper ────────────────────────────── */
+.contact-link:hover .arrow {
+  transform: translateX(4px);
+}
+
+/* Magnetic wrapper */
 .magnetic {
   display: inline-block;
   will-change: transform;
 }
 
-/* ─── Mobile ─────────────────────────────────────────────── */
-@media (max-width: 640px) {
-  .name { letter-spacing: 0.04em; }
-  #bio { padding: 4rem 6vw; }
-  #contact { padding: 3rem 6vw; }
+/* ─── Focus visible ───────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--accent1);
+  outline-offset: 3px;
+}
+
+/* ─── Mobile ──────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  body { cursor: auto; }
+
+  .hero-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: 55% 45%;
+    height: 100svh;
+  }
+
+  .hero-left {
+    order: 2;
+    padding: 3rem 6vw 4rem;
+    justify-content: flex-start;
+  }
+
+  .hero-left::after { display: none; }
+
+  .hero-right {
+    order: 1;
+  }
+
+  .name {
+    font-size: clamp(2.8rem, 11vw, 5rem);
+  }
+
+  .hero-eyebrow { margin-bottom: 1.5rem; }
+  .tagline { margin-top: 1.25rem; }
+
+  .scroll-indicator {
+    left: 50%;
+    bottom: 1.5rem;
+  }
+
+  #facts { padding: 5rem 6vw; }
+  #bio   { padding: 5rem 6vw; }
+  #contact { padding: 4rem 6vw; }
+}
+
+@media (max-width: 480px) {
+  .contact-link { font-size: 0.78rem; letter-spacing: 0.04em; }
 }

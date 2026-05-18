@@ -6,54 +6,80 @@
   <title>Hector Futtrup</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/src/styles/grain.css" />
   <link rel="stylesheet" href="/src/styles/main.css" />
 </head>
 <body>
 
+  <!-- Custom cursor (desktop only, hidden on touch) -->
+  <div class="cursor-dot" aria-hidden="true"></div>
+  <div class="cursor-ring" aria-hidden="true"></div>
+
+  <!-- Scroll progress bar -->
+  <div class="scroll-progress" aria-hidden="true"></div>
+
   <!-- Grain overlay -->
   <div class="grain"></div>
 
-  <!-- Hero section -->
+  <!-- ─── Hero ─────────────────────────────────────────────── -->
   <section id="hero">
-    <div id="canvas-container"></div>
-    <div class="hero-text">
-      <h1 class="name">HECTOR FUTTRUP</h1>
-      <p class="tagline">Entrepreneur &nbsp;·&nbsp; 17 &nbsp;·&nbsp; Copenhagen</p>
+    <div class="hero-grid">
+
+      <div class="hero-left">
+        <span class="hero-eyebrow">Personal</span>
+        <h1 class="name">
+          <span class="name-line"><span class="name-line-inner">HECTOR</span></span>
+          <span class="name-line"><span class="name-line-inner">FUTTRUP</span></span>
+        </h1>
+        <p class="tagline">Entrepreneur&nbsp;·&nbsp;17&nbsp;·&nbsp;Copenhagen</p>
+      </div>
+
+      <div class="hero-right">
+        <div class="sculpture-wrap">
+          <img
+            class="sculpture"
+            src="/images/sculpture.jpg"
+            alt="Classical marble bust"
+            draggable="false"
+          />
+        </div>
+      </div>
+
     </div>
-    <div class="scroll-indicator">
+
+    <div class="scroll-indicator" aria-hidden="true">
       <span class="scroll-line"></span>
     </div>
   </section>
 
-  <!-- Explosion section — Three.js canvas stays, labels appear here -->
-  <section id="explosion">
-    <div id="labels-container"></div>
+  <!-- ─── Facts ─────────────────────────────────────────────── -->
+  <section id="facts">
+    <div class="facts-inner">
+      <span class="facts-label">About</span>
+      <div class="facts-grid" id="facts-grid"></div>
+    </div>
   </section>
 
-  <!-- Bio section -->
+  <!-- ─── Bio ───────────────────────────────────────────────── -->
   <section id="bio">
     <div class="bio-inner">
       <p class="bio-text">
-        <span class="reveal-word">I grew up in Copenhagen.</span>
-        <span class="reveal-word">Worked since I was 14 — cinema, catering, craftsmanship.</span>
-        <span class="reveal-word">Now I build AI companies.</span>
+        <span class="reveal-line"><span class="reveal-line-inner">I grew up in Copenhagen.</span></span>
+        <span class="reveal-line"><span class="reveal-line-inner">Worked since I was 14 — cinema, catering, craftsmanship.</span></span>
+        <span class="reveal-line"><span class="reveal-line-inner">Now I build AI companies.</span></span>
       </p>
     </div>
   </section>
 
-  <!-- Contact section -->
+  <!-- ─── Contact ───────────────────────────────────────────── -->
   <section id="contact">
     <div class="contact-inner">
       <a class="contact-link magnetic" href="mailto:Hector@futtrup.eu">
-        Say hello &nbsp;<span class="arrow">→</span>&nbsp; Hector@futtrup.eu
+        Say hello&nbsp;&nbsp;<span class="arrow">→</span>&nbsp;&nbsp;Hector@futtrup.eu
       </a>
     </div>
   </section>
-
-  <!-- Three.js CSS2D labels mount point (Three.js appends its own div here) -->
-  <div id="css2d-renderer"></div>
 
   <script type="module" src="/src/main.js"></script>
 </body>
