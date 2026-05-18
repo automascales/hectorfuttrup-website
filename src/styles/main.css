@@ -9,6 +9,12 @@
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+/* Dark theme overrides */
+:root[data-theme="dark"] {
+  --bg: #111009;
+  --fg: #f2ede4;
+}
+
 /* ─── Reset ───────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -20,6 +26,7 @@ body {
   font-family: var(--ff-mono);
   overflow-x: hidden;
   cursor: none;
+  transition: background-color 0.5s ease, color 0.5s ease;
 }
 
 /* Restore cursor on touch devices */
@@ -121,6 +128,32 @@ body {
 }
 
 .nav-contact:hover {
+  opacity: 1;
+  color: var(--accent1);
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 1.8rem;
+  pointer-events: auto;
+}
+
+.theme-toggle {
+  font-family: var(--ff-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--fg);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: none;
+  opacity: 0.45;
+  transition: opacity 0.22s ease, color 0.22s ease;
+}
+
+.theme-toggle:hover {
   opacity: 1;
   color: var(--accent1);
 }

@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <script>
+    (function(){var t=localStorage.getItem('theme');if(t==='dark')document.documentElement.setAttribute('data-theme','dark');})();
+  </script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Hector Futtrup</title>
@@ -26,7 +29,10 @@
   <!-- ─── Navigation ───────────────────────────────────────── -->
   <nav class="site-nav" aria-label="Site navigation">
     <span class="nav-coords" aria-label="Copenhagen, Denmark">55.6761° N  12.5683° E</span>
-    <a href="#contact" class="nav-contact">Contact</a>
+    <div class="nav-right">
+      <button class="theme-toggle" aria-label="Toggle dark mode">DARK</button>
+      <a href="#contact" class="nav-contact">Contact</a>
+    </div>
   </nav>
 
   <!-- ─── Hero ─────────────────────────────────────────────── -->
