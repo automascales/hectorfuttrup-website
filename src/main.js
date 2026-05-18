@@ -5,6 +5,31 @@ import { initScroll } from './scroll.js'
 
 gsap.registerPlugin(ScrollTrigger)
 
+function scrambleToCoords(el, target, duration = 1800) {
+  const digits = '0123456789'
+  const frameMs = 35
+  const steps = Math.ceil(duration / frameMs)
+  let step = 0
+  const interval = setInterval(() => {
+    step++
+    const lockCount = Math.floor((step / steps) * target.length)
+    let out = ''
+    for (let i = 0; i < target.length; i++) {
+      const c = target[i]
+      if (i < lockCount || c === '°' || c === ' ' || c === 'N' || c === 'E' || c === ',' || c === '.') {
+        out += c
+      } else {
+        out += digits[Math.floor(Math.random() * digits.length)]
+      }
+    }
+    el.textContent = out
+    if (step >= steps) {
+      clearInterval(interval)
+      el.textContent = target
+    }
+  }, frameMs)
+}
+
 // Set initial animation states
 gsap.set('.site-nav', { opacity: 0, y: -10 })
 gsap.set('.name-line-inner', { y: '110%' })
@@ -56,6 +81,11 @@ tl.to('.site-nav', {
   duration: 0.7,
   ease: 'power2.out',
 }, 0.4)
+
+tl.call(() => {
+  const coords = document.querySelector('.nav-coords')
+  if (coords) scrambleToCoords(coords, '55.6761° N  12.5683° E', 1800)
+}, [], 0.65)
 
 initCursor()
 initScroll()
