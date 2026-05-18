@@ -38,37 +38,6 @@ export function initScroll() {
     })
   }
 
-  // Facts chips — staggered reveal
-  const chips = document.querySelectorAll('.fact-chip')
-  if (chips.length) {
-    gsap.to(chips, {
-      opacity: 1,
-      y: 0,
-      duration: 0.5,
-      stagger: { each: 0.045, from: 'start' },
-      ease: 'power2.out',
-      scrollTrigger: {
-        trigger: '#facts',
-        start: 'top 78%',
-      },
-    })
-  }
-
-  // Facts label reveal
-  const factsLabel = document.querySelector('.facts-label')
-  if (factsLabel) {
-    gsap.fromTo(factsLabel,
-      { opacity: 0, y: 10 },
-      {
-        opacity: 1,
-        y: 0,
-        duration: 0.6,
-        ease: 'power2.out',
-        scrollTrigger: { trigger: '#facts', start: 'top 80%' },
-      }
-    )
-  }
-
   // Bio text — mask/clip reveal per line
   document.querySelectorAll('.reveal-line').forEach((el) => {
     const inner = el.querySelector('.reveal-line-inner')
@@ -94,6 +63,15 @@ export function initScroll() {
       }
     )
   }
+
+  // Smooth anchor navigation (nav Contact link)
+  document.querySelectorAll('a[href^="#"]').forEach((a) => {
+    a.addEventListener('click', (e) => {
+      e.preventDefault()
+      const target = document.querySelector(a.getAttribute('href'))
+      if (target) lenis.scrollTo(target, { offset: -56 })
+    })
+  })
 
   return lenis
 }
