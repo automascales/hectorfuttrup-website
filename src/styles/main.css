@@ -285,6 +285,40 @@ body {
 .reveal-line:nth-child(2) .reveal-line-inner { transition-delay: 0.08s; }
 .reveal-line:nth-child(3) .reveal-line-inner { transition-delay: 0.18s; }
 
+/* ─── Marquee ─────────────────────────────────────────────── */
+#marquee {
+  overflow: hidden;
+  border-top: 1px solid rgba(26, 20, 16, 0.08);
+  border-bottom: 1px solid rgba(26, 20, 16, 0.08);
+  padding: 1.2rem 0;
+  background: var(--bg);
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee-scroll 70s linear infinite;
+}
+
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+.marquee-content {
+  font-family: var(--ff-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--fg);
+  opacity: 0.38;
+  white-space: nowrap;
+}
+
+@keyframes marquee-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
 /* ─── Contact ─────────────────────────────────────────────── */
 #contact {
   min-height: 35vh;
