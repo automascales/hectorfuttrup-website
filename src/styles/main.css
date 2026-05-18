@@ -316,7 +316,6 @@ body {
 
 /* Stagger delays */
 .reveal-line:nth-child(2) .reveal-line-inner { transition-delay: 0.08s; }
-.reveal-line:nth-child(3) .reveal-line-inner { transition-delay: 0.18s; }
 
 /* ─── Marquee ─────────────────────────────────────────────── */
 #marquee {
