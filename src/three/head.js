@@ -1,5 +1,6 @@
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
+import { LoopSubdivision } from 'three-subdivide'
 
 export function loadHead(scene) {
   return new Promise((resolve) => {
@@ -18,9 +19,10 @@ export function loadHead(scene) {
       (gltf) => {
         const model = gltf.scene
 
-        // Apply marble material to all meshes
+        // Apply marble material + subdivide for higher polygon density
         model.traverse((child) => {
           if (child.isMesh) {
+            child.geometry = LoopSubdivision.modify(child.geometry, 1, { split: false })
             child.material = material
             child.castShadow = false
           }

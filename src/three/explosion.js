@@ -1,5 +1,6 @@
 import * as THREE from 'three'
 import { CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js'
+import { ConvexGeometry } from 'three/addons/geometries/ConvexGeometry.js'
 
 const FACTS = [
   '17 years old',
@@ -20,8 +21,9 @@ const FACTS = [
   'Never stops building',
 ]
 
-const NUM_GROUPS = 52   // more groups = smaller, shard-like pieces
-const LABELED = FACTS.length  // first 16 get text labels; rest are decorative
+const NUM_GROUPS = 52
+const LABELED = FACTS.length
+const SHARD_THICKNESS = 0.045  // depth of each convex hull shard in world units
 
 export function buildExplosion(scene, model) {
   if (!model) return null
@@ -50,14 +52,13 @@ export function buildExplosion(scene, model) {
 
   if (triangles.length === 0) return null
 
-  // Random shuffle: creates varied, irregular fragment shapes (no systematic ring/strip artifacts)
+  // Fisher-Yates shuffle — irregular fragment shapes, no ring/strip artifacts
   for (let i = triangles.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1))
     ;[triangles[i], triangles[j]] = [triangles[j], triangles[i]]
   }
 
   const chunkSize = Math.ceil(triangles.length / NUM_GROUPS)
-
   const matcapTex = new THREE.TextureLoader().load('/textures/matcap-marble.png')
   const fragments = []
 
@@ -75,21 +76,49 @@ export function buildExplosion(scene, model) {
     gCenter.divideScalar(chunk.length)
     gNormal.divideScalar(chunk.length).normalize()
 
-    // Build geometry with vertices in local space (relative to gCenter)
-    const verts = []
+    // Collect unique vertex positions in local space (relative to gCenter)
+    const seen = new Set()
+    const frontPoints = []
     chunk.forEach(({ v0, v1, v2 }) => {
-      verts.push(
-        v0.x - gCenter.x, v0.y - gCenter.y, v0.z - gCenter.z,
-        v1.x - gCenter.x, v1.y - gCenter.y, v1.z - gCenter.z,
-        v2.x - gCenter.x, v2.y - gCenter.y, v2.z - gCenter.z
-      )
+      for (const v of [v0, v1, v2]) {
+        const key = `${v.x.toFixed(5)},${v.y.toFixed(5)},${v.z.toFixed(5)}`
+        if (!seen.has(key)) {
+          seen.add(key)
+          frontPoints.push(v.clone().sub(gCenter))
+        }
+      }
     })
 
-    const geo = new THREE.BufferGeometry()
-    geo.setAttribute('position', new THREE.Float32BufferAttribute(verts, 3))
-    geo.computeVertexNormals()
+    // Offset back-face copies along -normal to give each shard real 3D thickness
+    const backPoints = frontPoints.map(p => p.clone().addScaledVector(gNormal, -SHARD_THICKNESS))
+    const allPoints = [...frontPoints, ...backPoints]
 
-    const mat = new THREE.MeshMatcapMaterial({ matcap: matcapTex, side: THREE.DoubleSide })
+    let geo
+    try {
+      geo = new ConvexGeometry(allPoints)
+      // Convert to non-indexed for true flat-shaded face normals
+      geo = geo.toNonIndexed()
+      geo.computeVertexNormals()
+    } catch {
+      // Fallback: flat triangle mesh if convex hull fails
+      const verts = []
+      chunk.forEach(({ v0, v1, v2 }) => {
+        verts.push(
+          v0.x - gCenter.x, v0.y - gCenter.y, v0.z - gCenter.z,
+          v1.x - gCenter.x, v1.y - gCenter.y, v1.z - gCenter.z,
+          v2.x - gCenter.x, v2.y - gCenter.y, v2.z - gCenter.z
+        )
+      })
+      geo = new THREE.BufferGeometry()
+      geo.setAttribute('position', new THREE.Float32BufferAttribute(verts, 3))
+      geo.computeVertexNormals()
+    }
+
+    const mat = new THREE.MeshMatcapMaterial({
+      matcap: matcapTex,
+      side: THREE.DoubleSide,
+      flatShading: true,
+    })
     const mesh = new THREE.Mesh(geo, mat)
     mesh.position.copy(gCenter)
     mesh.visible = false
