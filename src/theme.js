@@ -6,18 +6,20 @@ export function initTheme() {
     if (theme === 'dark') {
       document.documentElement.setAttribute('data-theme', 'dark')
       toggle.textContent = 'LIGHT'
+      toggle.setAttribute('aria-label', 'Switch to light mode')
     } else {
       document.documentElement.removeAttribute('data-theme')
       toggle.textContent = 'DARK'
+      toggle.setAttribute('aria-label', 'Switch to dark mode')
     }
   }
 
-  apply(localStorage.getItem('theme') || 'light')
+  apply((() => { try { return localStorage.getItem('theme') } catch(e) { return null } })() || 'light')
 
   toggle.addEventListener('click', () => {
     const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
     const next = isDark ? 'light' : 'dark'
-    localStorage.setItem('theme', next)
+    try { localStorage.setItem('theme', next) } catch (e) {}
     apply(next)
   })
 }
