@@ -1,0 +1,229 @@
+/* ─── Design tokens ─────────────────────────────────────── */
+:root {
+  --bg:       #f2ede4;
+  --fg:       #1a1410;
+  --accent1:  #c85a3a;   /* terracotta */
+  --accent2:  #b8942a;   /* ochre/gold */
+  --ff-serif: 'Playfair Display', Georgia, serif;
+  --ff-mono:  'Space Mono', 'Courier New', monospace;
+}
+
+/* ─── Reset ─────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: auto; } /* Lenis handles smooth scroll */
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--ff-mono);
+  overflow-x: hidden;
+}
+
+/* ─── Canvas — always fixed in background ────────────────── */
+#canvas-container {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+}
+
+#canvas-container canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* ─── Hero ───────────────────────────────────────────────── */
+#hero {
+  position: relative;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding-bottom: 6vh;
+  z-index: 1;
+  /* transparent — canvas shows through */
+  background: transparent;
+}
+
+.hero-text {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  pointer-events: none;
+}
+
+.name {
+  font-family: var(--ff-serif);
+  font-size: clamp(2.4rem, 7vw, 7rem);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  color: var(--fg);
+}
+
+.tagline {
+  margin-top: 0.75rem;
+  font-family: var(--ff-mono);
+  font-size: clamp(0.65rem, 1.2vw, 0.9rem);
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--fg);
+  opacity: 0.55;
+}
+
+/* Scroll indicator */
+.scroll-indicator {
+  position: absolute;
+  bottom: 2.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.scroll-line {
+  display: block;
+  width: 1px;
+  height: 3.5rem;
+  background: var(--fg);
+  opacity: 0.3;
+  animation: scrollPulse 2s ease-in-out infinite;
+  transform-origin: top;
+}
+
+@keyframes scrollPulse {
+  0%   { transform: scaleY(0); opacity: 0; }
+  50%  { transform: scaleY(1); opacity: 0.35; }
+  100% { transform: scaleY(0); opacity: 0; transform-origin: bottom; }
+}
+
+/* ─── Explosion section ──────────────────────────────────── */
+#explosion {
+  position: relative;
+  height: 200vh;
+  z-index: 1;
+  background: transparent;
+}
+
+/* CSS2D labels rendered by Three.js */
+#css2d-renderer {
+  position: fixed;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.fragment-label {
+  font-family: var(--ff-mono);
+  font-size: clamp(0.55rem, 1vw, 0.78rem);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--fg);
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  padding: 0.2em 0;
+}
+
+.fragment-label.visible {
+  opacity: 1;
+}
+
+/* ─── Bio ────────────────────────────────────────────────── */
+#bio {
+  position: relative;
+  z-index: 2;
+  min-height: 70vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6rem 8vw;
+  background: var(--bg);
+}
+
+.bio-inner {
+  max-width: 52rem;
+}
+
+.bio-text {
+  font-family: var(--ff-serif);
+  font-size: clamp(1.4rem, 3.5vw, 2.6rem);
+  line-height: 1.5;
+  font-weight: 400;
+  color: var(--fg);
+}
+
+.reveal-word {
+  display: block;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(1.2em);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.reveal-word.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ─── Contact ────────────────────────────────────────────── */
+#contact {
+  position: relative;
+  z-index: 2;
+  min-height: 40vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 8vw;
+  background: var(--bg);
+  border-top: 1px solid rgba(26, 20, 16, 0.1);
+}
+
+.contact-link {
+  font-family: var(--ff-mono);
+  font-size: clamp(0.85rem, 1.8vw, 1.2rem);
+  letter-spacing: 0.08em;
+  color: var(--fg);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  position: relative;
+  transition: color 0.25s ease;
+}
+
+.contact-link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--accent1);
+  transition: width 0.35s ease;
+}
+
+.contact-link:hover { color: var(--accent1); }
+.contact-link:hover::after { width: 100%; }
+
+.arrow {
+  color: var(--accent1);
+  font-size: 1.1em;
+}
+
+/* ─── Magnetic cursor wrapper ────────────────────────────── */
+.magnetic {
+  display: inline-block;
+  will-change: transform;
+}
+
+/* ─── Mobile ─────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .name { letter-spacing: 0.04em; }
+  #bio { padding: 4rem 6vw; }
+  #contact { padding: 3rem 6vw; }
+}

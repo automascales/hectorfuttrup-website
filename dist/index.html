@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hector Futtrup</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <script type="module" crossorigin src="/assets/index-Bzetbfn8.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-D4-MA2rP.css">
+</head>
+<body>
+
+  <!-- Grain overlay -->
+  <div class="grain"></div>
+
+  <!-- Hero section -->
+  <section id="hero">
+    <div id="canvas-container"></div>
+    <div class="hero-text">
+      <h1 class="name">HECTOR FUTTRUP</h1>
+      <p class="tagline">Entrepreneur &nbsp;·&nbsp; 17 &nbsp;·&nbsp; Copenhagen</p>
+    </div>
+    <div class="scroll-indicator">
+      <span class="scroll-line"></span>
+    </div>
+  </section>
+
+  <!-- Explosion section — Three.js canvas stays, labels appear here -->
+  <section id="explosion">
+    <div id="labels-container"></div>
+  </section>
+
+  <!-- Bio section -->
+  <section id="bio">
+    <div class="bio-inner">
+      <p class="bio-text">
+        <span class="reveal-word">I grew up in Copenhagen.</span>
+        <span class="reveal-word">Worked since I was 14 — cinema, catering, craftsmanship.</span>
+        <span class="reveal-word">Now I build AI companies.</span>
+      </p>
+    </div>
+  </section>
+
+  <!-- Contact section -->
+  <section id="contact">
+    <div class="contact-inner">
+      <a class="contact-link magnetic" href="mailto:Hector@futtrup.eu">
+        Say hello &nbsp;<span class="arrow">→</span>&nbsp; Hector@futtrup.eu
+      </a>
+    </div>
+  </section>
+
+  <!-- Three.js CSS2D labels mount point (Three.js appends its own div here) -->
+  <div id="css2d-renderer"></div>
+
+</body>
+</html>
