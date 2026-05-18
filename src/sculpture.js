@@ -17,4 +17,9 @@ export function initSculptureLookAt() {
     rotY(dx * 15)
     rotX(-dy * 8)
   })
+
+  document.addEventListener('mouseleave', () => {
+    rotY(0)
+    rotX(0)
+  })
 }

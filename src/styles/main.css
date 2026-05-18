@@ -351,6 +351,10 @@ body {
   to   { transform: translateX(-50%); }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track { animation: none; }
+}
+
 /* ─── Contact ─────────────────────────────────────────────── */
 #contact {
   min-height: 35vh;
