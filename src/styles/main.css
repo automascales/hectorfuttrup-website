@@ -231,7 +231,6 @@ body {
 .sculpture-wrap {
   position: absolute;
   inset: 0;
-  overflow: hidden;
 }
 
 .sculpture {
