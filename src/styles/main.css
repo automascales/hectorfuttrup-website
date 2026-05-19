@@ -360,7 +360,7 @@ body {
   font-size: 0.52rem;
   letter-spacing: 0.22em;
   color: var(--fg);
-  opacity: 0.3;
+  opacity: 0.45;
 }
 
 .fact-main {
@@ -377,7 +377,7 @@ body {
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--fg);
-  opacity: 0.38;
+  opacity: 0.52;
   margin-top: auto;
 }
 
@@ -402,7 +402,7 @@ body {
   letter-spacing: 0.28em;
   text-transform: uppercase;
   color: var(--fg);
-  opacity: 0.35;
+  opacity: 0.5;
   margin-bottom: 1.8rem;
 }
 
@@ -489,7 +489,7 @@ body {
   text-transform: uppercase;
   color: var(--fg);
   text-decoration: none;
-  opacity: 0.38;
+  opacity: 0.52;
   transition: opacity 0.22s ease, color 0.22s ease;
 }
 
