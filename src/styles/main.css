@@ -472,6 +472,32 @@ body {
   will-change: transform;
 }
 
+/* ─── Footer ─────────────────────────────────────────────── */
+.site-footer {
+  display: flex;
+  justify-content: center;
+  gap: 2.5rem;
+  padding: 1.8rem 8vw;
+  border-top: 1px solid var(--divider);
+  background: var(--bg);
+}
+
+.footer-social {
+  font-family: var(--ff-mono);
+  font-size: 0.52rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--fg);
+  text-decoration: none;
+  opacity: 0.38;
+  transition: opacity 0.22s ease, color 0.22s ease;
+}
+
+.footer-social:hover {
+  opacity: 1;
+  color: var(--accent1);
+}
+
 /* ─── Focus visible ───────────────────────────────────────── */
 :focus-visible {
   outline: 2px solid var(--accent1);
