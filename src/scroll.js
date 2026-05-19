@@ -49,6 +49,16 @@ export function initScroll() {
     })
   })
 
+  // Facts grid — staggered reveal per card
+  document.querySelectorAll('.fact-item').forEach((el, i) => {
+    el.style.transitionDelay = `${i * 0.1}s`
+    ScrollTrigger.create({
+      trigger: '#facts',
+      start: 'top 82%',
+      onEnter: () => el.classList.add('revealed'),
+    })
+  })
+
   // Contact section — fade up
   const contactInner = document.querySelector('.contact-inner')
   if (contactInner) {
@@ -62,6 +72,32 @@ export function initScroll() {
         scrollTrigger: { trigger: '#contact', start: 'top 85%' },
       }
     )
+  }
+
+  // Contact link — copy email to clipboard, fall back to mailto
+  const contactLink = document.querySelector('.contact-link')
+  if (contactLink) {
+    contactLink.addEventListener('click', (e) => {
+      e.preventDefault()
+      const email = 'Hector@futtrup.eu'
+      const emailEl = contactLink.querySelector('.contact-email')
+      const arrowEl = contactLink.querySelector('.arrow')
+
+      navigator.clipboard.writeText(email).then(() => {
+        const prevEmail = emailEl.textContent
+        const prevArrow = arrowEl.innerHTML
+        emailEl.textContent = 'Copied'
+        arrowEl.innerHTML = '&nbsp;&nbsp;✓&nbsp;&nbsp;'
+        contactLink.classList.add('copied')
+        setTimeout(() => {
+          emailEl.textContent = prevEmail
+          arrowEl.innerHTML = prevArrow
+          contactLink.classList.remove('copied')
+        }, 2000)
+      }).catch(() => {
+        window.location.href = `mailto:${email}`
+      })
+    })
   }
 
   // Smooth anchor navigation (nav Contact link)
